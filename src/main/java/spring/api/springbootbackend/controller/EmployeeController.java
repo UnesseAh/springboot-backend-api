@@ -1,9 +1,9 @@
 package spring.api.springbootbackend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import spring.api.springbootbackend.exeption.ResourceNotFoundExeption;
 import spring.api.springbootbackend.model.Employee;
 import spring.api.springbootbackend.repository.EmployeeRepository;
 
@@ -21,5 +21,18 @@ public class EmployeeController {
         return employeeRepository.findAll();
     }
 
+    // build create employee REST API
+    @PostMapping
+    public Employee createEmployee(@RequestBody Employee employee){
+        return employeeRepository.save(employee);
+    }
+
+    // build get employee by id REST API
+    @GetMapping("{id}")
+    public ResponseEntity<Employee> getEmployeeById(@PathVariable long id){
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundExeption("Employee not exist with this id : " + id));
+        return ResponseEntity.ok(employee);
+    }
 
 }
